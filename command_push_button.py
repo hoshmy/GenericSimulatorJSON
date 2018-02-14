@@ -4,28 +4,24 @@ from PyQt5.QtCore import pyqtSignal
 from ninja_widget import NinjaWidget
 from communcation import instance as communication
 
-
 class CommandPushButton(QPushButton, NinjaWidget):
 
-    _send_via_communication = pyqtSignal('QString')
+    _signal_send_via_communication = pyqtSignal('QString')
 
     def __init__(self, command_file_name):
-        QPushButton.__init__(self, widget_name='')
-        NinjaWidget.__init__(self, widget_name=self._parse_widget_name(command_file_name))
+        widget_name = self._parse_widget_name(command_file_name)
+        QPushButton.__init__(self, widget_name=widget_name)
+        NinjaWidget.__init__(self, widget_name=widget_name)
 
         self._command_file_name = command_file_name
-        self.setText(self._parse_widget_name(command_file_name))
+        self.setText(self._widget_name)
 
-        # Declare signals
-        # self._send_via_communication = pyqtSignal('QString')
+        self._init_connections()
 
-        self.init_connections()
-
-    def init_connections(self):
+    def _init_connections(self):
         self.released.connect(self._clicked)
 
-        # communication.send.connect(self._send_via_communication)
-        self._send_via_communication.connect(communication.send)
+        self._signal_send_via_communication.connect(communication.send)
 
     def _parse_command(self):
         command = ''
@@ -39,7 +35,7 @@ class CommandPushButton(QPushButton, NinjaWidget):
 
     def _send_command(self, command):
         self._log('sending: {}'.format(command))
-        self._send_via_communication.emit(command)
+        self._signal_send_via_communication.emit(command)
 
     def _clicked(self, bool=False):
         self._log('released')
