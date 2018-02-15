@@ -1,21 +1,19 @@
 from PyQt5.QtWidgets import QLabel
-from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtCore import pyqtSlot
 
 from ninja_widget import NinjaWidget
-from communcation import instance as communication
-# from scheduler import instance as scheduler
+from utilities import Utilities
+from global_declarations import EntityNameMorphology
 
 
 class StatusLabel(QLabel, NinjaWidget):
 
-    def __init__(self, status_file_name, parent=None):
-        widget_name = self._parse_widget_name(status_file_name)
+    def __init__(self, entity_data, parent=None):
+        self._status_data = entity_data
+        widget_name = self._parse_widget_name(self._status_data[EntityNameMorphology.ENTITY_NAME.value])
         QLabel.__init__(self, widget_name=widget_name)
         NinjaWidget.__init__(self, widget_name=widget_name)
 
-        self._status_file_name = status_file_name
-        self._status_data = self._widget_name
         self.setText(self._widget_name)
 
         self._init_connections()

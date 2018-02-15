@@ -37,18 +37,21 @@ class MixedTabWidget(QWidget, NinjaWidget):
                             entity_name=file, entity_path=self._mixed_tab_folder
                     )
 
+                    if not Utilities.entity_for_display(entity_data):
+                        continue
+
                     entity_type = entity_data[EntityNameMorphology.ENTITY_TYPE.value]
                     entity = None
                     if entity_type == EntityType.ENTITY_TYPE_COMMAND.value:
                         entity = CommandPushButton(
-                            command_file_name=entity_data[EntityNameMorphology.ENTITY_FOLDER.value],
+                            entity_data=entity_data
                         )
-                    if entity_type == EntityType.ENTITY_TYPE_STATUS.value:
+                    elif entity_type == EntityType.ENTITY_TYPE_STATUS.value:
                         entity = StatusLabel(
-                            status_file_name=entity_data[EntityNameMorphology.ENTITY_FOLDER.value]
+                            entity_data=entity_data
                         )
                     else:
-                        self._log('mixed type widget encountered with error entity tpr: {}'.format(entity_type))
+                        self._log('mixed type widget encountered with error entity tpr: {}'.format(entity_data))
 
                     row = Utilities.calculate_row(i)
                     col = Utilities.calculate_column(i)

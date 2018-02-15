@@ -1,12 +1,10 @@
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QGridLayout
-from PyQt5.QtCore import pyqtSignal
-from PyQt5 import QtCore
 import os
 
 from ninja_widget import NinjaWidget
 from status_label import StatusLabel
+
 
 class StatusesWidget(QWidget, NinjaWidget):
 

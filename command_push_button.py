@@ -3,17 +3,19 @@ from PyQt5.QtCore import pyqtSignal
 
 from ninja_widget import NinjaWidget
 from communcation import instance as communication
+from global_declarations import EntityNameMorphology
 
 class CommandPushButton(QPushButton, NinjaWidget):
 
     _signal_send_via_communication = pyqtSignal('QString')
 
-    def __init__(self, command_file_name):
-        widget_name = self._parse_widget_name(command_file_name)
+    def __init__(self, entity_data):
+        self._status_data = entity_data
+        widget_name = self._parse_widget_name(self._status_data[EntityNameMorphology.ENTITY_NAME.value])
         QPushButton.__init__(self, widget_name=widget_name)
         NinjaWidget.__init__(self, widget_name=widget_name)
 
-        self._command_file_name = command_file_name
+        self._command_data = entity_data
         self.setText(self._widget_name)
 
         self._init_connections()
@@ -24,12 +26,13 @@ class CommandPushButton(QPushButton, NinjaWidget):
         self._signal_send_via_communication.connect(communication.send)
 
     def _parse_command(self):
+        command_file_name = self._command_data[EntityNameMorphology.ENTITY_FOLDER.value]
         command = ''
-        if self._is_widget_file_exists(self._command_file_name):
-            with open(self._command_file_name, mode='r') as f:
+        if self._is_widget_file_exists(command_file_name):
+            with open(command_file_name, mode='r') as f:
                 command = f.read()
         else:
-            self._log('widget file {} does\'nt exists'.format(self._command_file_name))
+            self._log('widget file {} does\'nt exists'.format(command_file_name))
 
         return command
 
