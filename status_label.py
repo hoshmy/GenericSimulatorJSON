@@ -10,6 +10,7 @@ from ninja_widget import NinjaWidget
 from utilities import Utilities
 from global_declarations import EntityNameMorphology
 from communcation import instance as communication_instance
+from global_declarations import General
 
 
 class _StatusBehaviourKey(Enum):
@@ -31,7 +32,6 @@ class StatusLabel(QLabel, NinjaWidget):
         self._status_message_from_communication = {}
 
         self._parse_status_behaviour()
-        self._build_ui()
         self._set_style()
 
         self.setText(self._construct_status_text())
@@ -39,13 +39,13 @@ class StatusLabel(QLabel, NinjaWidget):
 
     def _init_connections(self):
         communication_instance.signal_status_update.connect(self.slot_incoming_status)
-        # scheduler.signal_heartbeat.connect(self.slot_incoming_status)
 
     def _set_style(self):
-        self.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.setFrameShape(QFrame.Panel)
         self.setFrameShadow(QFrame.Sunken)
         self.setLineWidth(2)
+        self.setMaximumHeight(General.MIXED_TAB_GRID_LAYOUT_MINIMUM_WIDTH.value)
 
     def _parse_status_behaviour(self):
         status_behaviour_str = {}
@@ -55,9 +55,6 @@ class StatusLabel(QLabel, NinjaWidget):
             self._status_behaviour = eval(status_behaviour_str)
         except Exception as e:
             self._log('eval failed with: {}'.format(status_behaviour_str))
-
-    def _build_ui(self):
-        pass # text = ''.join([self._status_behaviour['label_text'], ': ', str(self._current_status)])
 
     def _construct_status_text(self):
         status_text = ''.join([self._status_behaviour['label_text'], ': ', str(self._current_status)])
@@ -92,4 +89,3 @@ class StatusLabel(QLabel, NinjaWidget):
                 )
             )
         self.setText(self._construct_status_text())
-        # self._slot_heartbeat(7666)
