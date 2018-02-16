@@ -37,7 +37,6 @@ class Communication(QThread):
 
     def _init_communication(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # self._sock.bind((General.UDP_IP.value, General.UDP_PORT.value))
 
     def run(self):
         self._log('Start communication thread')
@@ -47,7 +46,12 @@ class Communication(QThread):
 
     @pyqtSlot('QString')
     def send(self, message):
-        self._log('sending {}'.format(message))
+        if self._is_connected:
+            sent = self._sock.sendto(message.encode(), (self._udp_ip, self._port))
+            self._log('sending {}'.format(message))
+        else:
+            self._log('can\'t send message, not connected yat')
+
 
     def _initial_communication_wait_for_connection(self):
         connection_counter = 0
@@ -89,10 +93,9 @@ class Communication(QThread):
                     print('received message, emiting status: {}'.format(data))
                     self.signal_status_update.emit(data)
             else:
-                if connection_counter%5 == 0:
-                    self._log('not yet connected')
+                pass
 
-            time.sleep(1)
+            time.sleep(0.001) # Pass CPU
 
         self._log('Communication thread exited')
 
