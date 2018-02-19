@@ -7,16 +7,15 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import Qt
 
 from ninja_widget import NinjaWidget
-from utilities import Utilities
 from global_declarations import EntityNameMorphology
 from communcation import instance as communication_instance
 from global_declarations import General
+from global_declarations import StatusBehaviourKey
 
 
-class _StatusBehaviourKey(Enum):
-        LABEL_TEXT = 'label_text'
-        STATUS_FROM_COMMUNICATION = 'status_from_communication'
-        PATH_IN_MESSAGE = 'path_in_message'
+class _Parameter(Enum):
+    LAYOUT_MAXIMUM_HEIGHT = 25
+    LAYOUT_MAXIMUM_WIDTH = 200
 
 
 class StatusLabel(QLabel, NinjaWidget):
@@ -45,7 +44,8 @@ class StatusLabel(QLabel, NinjaWidget):
         self.setFrameShape(QFrame.Panel)
         self.setFrameShadow(QFrame.Sunken)
         self.setLineWidth(2)
-        self.setMaximumHeight(General.MIXED_TAB_GRID_LAYOUT_MINIMUM_WIDTH.value)
+        self.setMaximumHeight(_Parameter.LAYOUT_MAXIMUM_HEIGHT.value)
+        self.setMaximumWidth(_Parameter.LAYOUT_MAXIMUM_WIDTH.value)
 
     def _parse_status_behaviour(self):
         status_behaviour_str = {}
@@ -70,10 +70,10 @@ class StatusLabel(QLabel, NinjaWidget):
         self._status_message_from_communication = received_json
 
         try:
-            required_status = self._status_behaviour[_StatusBehaviourKey.STATUS_FROM_COMMUNICATION.value]
+            required_status = self._status_behaviour[StatusBehaviourKey.STATUS_FROM_COMMUNICATION.value]
             if self._status_message_from_communication['status'] == required_status:
-                first_key = self._status_behaviour[_StatusBehaviourKey.PATH_IN_MESSAGE.value][0]
-                compliment_keys = self._status_behaviour[_StatusBehaviourKey.PATH_IN_MESSAGE.value][1:]
+                first_key = self._status_behaviour[StatusBehaviourKey.PATH_IN_MESSAGE.value][0]
+                compliment_keys = self._status_behaviour[StatusBehaviourKey.PATH_IN_MESSAGE.value][1:]
 
                 # Extract keys
                 status = self._status_message_from_communication[first_key]
@@ -84,7 +84,7 @@ class StatusLabel(QLabel, NinjaWidget):
                 self._slot_heartbeat(777)
         except Exception as e:
             self._log('Path in message  wasn\'t correct is {}, Error was {}'.format(
-                    self._status_behaviour[EntityNameMorphology.ENTITY_FOLDER.value],
+                    self._status_data[EntityNameMorphology.ENTITY_FOLDER.value],
                     str(e)
                 )
             )

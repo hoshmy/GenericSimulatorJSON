@@ -12,6 +12,7 @@ from PyQt5.QtCore import Qt
 from ninja_widget import NinjaWidget
 from command_push_button import CommandPushButton
 from status_label import StatusLabel
+from boolean_widget import BooleanWidget
 from global_declarations import EntityType
 from global_declarations import EntityNameMorphology
 from global_declarations import General
@@ -45,8 +46,12 @@ class MixedTabWidget(QWidget, NinjaWidget):
                         entity = StatusLabel(
                             entity_data=entity_data
                         )
+                    elif entity_type == EntityType.ENTITY_TYPE_BOOLEAN.value:
+                        entity = BooleanWidget(
+                            entity_data=entity_data
+                        )
                     else:
-                        self._log('mixed type widget encountered with error entity tpr: {}'.format(entity_data))
+                        self._log('mixed type widget encountered with error entity type: {}'.format(entity_data))
 
                     row = Utilities.calculate_row(i)
                     col = Utilities.calculate_column(i)
@@ -77,5 +82,6 @@ class MixedTabWidget(QWidget, NinjaWidget):
 
         self._build_ui()
         self._init_connections()
+
     def _init_connections(self):
         pass
