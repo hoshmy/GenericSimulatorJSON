@@ -29,11 +29,11 @@ class _Parameters(Enum):
         RESOURCES_FOLDER = 'label_text'
         STATUS_FROM_COMMUNICATION = 'status_from_communication'
         PATH_IN_MESSAGE = 'path_in_message'
-        BOOLEAN_BULB_WIDTH = 30
-        BOOLEAN_BULB_HEIGHT = 30
-        HEADER_LABEL_WIDTH = 270
-        HEADER_LABEL_HEIGHT = 30
-        TOTAL_WIDGET_WIDTH = 300
+        BOOLEAN_BULB_WIDTH = 20
+        BOOLEAN_BULB_HEIGHT = 20
+        HEADER_LABEL_WIDTH = 90
+        HEADER_LABEL_HEIGHT = 20
+        TOTAL_WIDGET_WIDTH = 200
         TOTAL_WIDGET_HEIGHT = 34
         NONE_ICON_NAME = 'question_mark.png'
         TRUE_ICON_NAME = 'true.png'
@@ -65,8 +65,8 @@ class BooleanWidget(QWidget, NinjaWidget):
     def _set_style(self):
         self.setMaximumWidth(_Parameters.TOTAL_WIDGET_WIDTH.value)
         self.setMaximumHeight(_Parameters.TOTAL_WIDGET_HEIGHT.value)
-        self._frame.setParent(self)
-        self._frame.setStyleSheet('border: 2px solid black;')
+        # self._frame.setParent(self)
+        # self._frame.setStyleSheet('border: 1px solid black;')
 
     def _parse_status_behaviour(self):
         status_behaviour_str = {}
@@ -78,10 +78,9 @@ class BooleanWidget(QWidget, NinjaWidget):
             self._log('eval failed with: {}'.format(status_behaviour_str))
 
     def _build_ui(self):
-        # self._frame = QFrame(self)
-        self._frame = QFrame()
-        self._frame.setStyleSheet('border: 2px solid black;')
-        horizontal_layout = QHBoxLayout(self._frame)
+        # self._frame = QFrame()
+        # horizontal_layout = QHBoxLayout(self._frame)
+        horizontal_layout = QHBoxLayout(self)
         self.setLayout(horizontal_layout)
 
         self._booleans_stacked_widget = QStackedWidget()
@@ -89,6 +88,7 @@ class BooleanWidget(QWidget, NinjaWidget):
 
         header_label = QLabel()
         header_label.setText(self._boolean_behaviour[StatusBehaviourKey.LABEL_TEXT.value])
+        header_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         # header_label.setMaximumWidth(_Parameters.HEADER_LABEL_WIDTH.value)
         # header_label.setMaximumHeight(_Parameters.HEADER_LABEL_HEIGHT.value)
 
@@ -106,9 +106,9 @@ class BooleanWidget(QWidget, NinjaWidget):
     def _init_boolean_type(self, index, resource_name):
         boolean_label = QLabel()
         boolean_label.setMaximumWidth(_Parameters.BOOLEAN_BULB_WIDTH.value)
-        # boolean_label.setMinimumWidth(_Parameters.BOOLEAN_BULB_WIDTH.value)
+        # boolean_label.setMinimumWidth(20)
         boolean_label.setMaximumHeight(_Parameters.BOOLEAN_BULB_HEIGHT.value)
-        # boolean_label.setMinimumHeight(_Parameters.BOOLEAN_BULB_HEIGHT.value)
+        # boolean_label.setMinimumHeight(20)
         boolean_path = os.path.join(General.RESOURCES_FOLDER.value, resource_name)
         boolean_pixmap = QPixmap(boolean_path)
         boolean_pixmap.scaled(boolean_label.size(), Qt.KeepAspectRatio)
